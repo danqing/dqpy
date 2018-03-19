@@ -1,0 +1,10 @@
+alembic
+ipython
+sphinx
+
+# Testing
+pdbpp
+flake8
+pytest
+pytest-cov
+mock
