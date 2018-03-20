@@ -2,7 +2,7 @@
 
 from setuptools import find_packages, setup
 
-__version__ = '0.1'
+__version__ = '1.0'
 
 requires = [
     'arrow==0.12.1',
@@ -10,7 +10,7 @@ requires = [
     'PyMySQL==0.8.0',
     'redis==2.10.6',
     'schematics==2.0.1',
-    'SQLAlchemy-Utils==0.33.0',
+    'SQLAlchemy-Utils==0.33.1',
     'SQLAlchemy==1.2.1',
     'toml==0.9.4',
 ]
@@ -18,7 +18,7 @@ requires = [
 setup(
     name='dqpy',
     version=__version__,
-    description='Danqing core Python library',
+    description='Danqing\'s shared Python library',
     author='Danqing Liu',
     author_email='code@danqing.io',
     url='https://github.com/danqing/dqpy',
