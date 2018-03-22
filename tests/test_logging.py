@@ -10,10 +10,10 @@ class TestLogging(unittest.TestCase):
     def test_error(self):
         logger = Logger(__name__)
         logger.error = mock.MagicMock()
-        data = {'a': 'b', 'c': 'd'}
+        data = {'a': 'b'}
         logging.error(logger, 'hi', data)
         logger.error.assert_called_with(
-            'hi\n%s', '\n`a`: b\n`c`: d', exc_info=True, extra={'data': data},
+            'hi\n%s', '\n`a`: b', exc_info=True, extra={'data': data},
         )
 
     def test_error_no_payload(self):
