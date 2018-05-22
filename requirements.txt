@@ -9,3 +9,7 @@ pytest
 pytest-cov
 mock
 coveralls
+pylint
+
+# Pypa
+twine

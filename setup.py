@@ -2,16 +2,16 @@
 
 from setuptools import find_packages, setup
 
-__version__ = '1.0'
+__version__ = '1.0.1'
 
 requires = [
     'arrow==0.12.1',
     'emails==0.5.15',
-    'PyMySQL==0.8.0',
+    'PyMySQL==0.8.1',
     'redis==2.10.6',
     'schematics==2.0.1',
-    'SQLAlchemy-Utils==0.33.2',
-    'SQLAlchemy==1.2.6',
+    'SQLAlchemy-Utils==0.33.3',
+    'SQLAlchemy==1.2.7',
     'toml==0.9.4',
 ]
 
@@ -25,4 +25,8 @@ setup(
     packages=find_packages(),
     install_requires=requires,
     zip_safe=True,
+    classifiers=(
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+    ),
 )

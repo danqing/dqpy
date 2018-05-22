@@ -21,6 +21,14 @@ migrate-db:
 bootstrap-db: drop-db create-db migrate-db
 	@echo Successfully bootstrapped database
 
+.PHONY: build
+build:
+	@python3 setup.py sdist bdist_wheel
+
+.PHONY: upload
+upload:
+	@twine upload dist/*
+
 .PHONY: lint
 lint:
 	@flake8 dq
