@@ -1,4 +1,5 @@
 import ast
+import json
 import mock
 import unittest
 from contextlib import suppress
@@ -93,6 +94,20 @@ class TestORM(unittest.TestCase):
         t2_inflate = t2.inflate_to_dict()
         assert t2_inflate == t2_dict
         assert t2_dict == {
+            'id': 1,
+            'user_uuid': uuid,
+            'user_type': 'regular',
+            'key2': True,
+            'created_at': now.timestamp,
+        }
+
+    def test_to_json(self):
+        uuid = str(uuid4())
+        now = arrow.get()
+        t2 = Table2(id=1, user_uuid=uuid, key=1, key2=1,
+                    user_type=UserType.regular, created_at=now)
+        t2_json = t2.to_json()
+        assert json.loads(t2_json) == {
             'id': 1,
             'user_uuid': uuid,
             'user_type': 'regular',
