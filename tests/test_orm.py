@@ -100,6 +100,16 @@ class TestORM(unittest.TestCase):
             'created_at': now.timestamp,
         }
 
+    def test_to_json(self):
+        uuid = str(uuid4())
+        now = arrow.get()
+        t2 = Table2(id=1, user_uuid=uuid, key=1, key2=1,
+                    user_type=UserType.regular, created_at=now)
+        t2_json = t2.to_json()
+        assert t2_json == ('{"id": 1, "user_uuid": ' + '"{}", '.format(uuid) +
+                           '"user_type": "regular", "key2": true, ' +
+                           '"created_at": {}'.format(now.timestamp) + '}')
+
     def test_from_dict(self):
         uuid = str(uuid4())
         now = arrow.get()

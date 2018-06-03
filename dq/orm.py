@@ -1,4 +1,5 @@
 import logging
+import json
 import pickle
 from collections import namedtuple
 from uuid import uuid4
@@ -99,8 +100,6 @@ class DictMixin(object):
     def to_dict(self):
         """Convert an object to dictionary.
 
-        :param boolean internal: Whether this is an internal call. If it is,
-            "private" fields will be included.
         :returns dict: The dictionary converted from the object.
         """
         out = {}
@@ -112,6 +111,13 @@ class DictMixin(object):
             if attr.serializer:
                 out[name] = attr.serializer(out[name])
         return out
+
+    def to_json(self):
+        """Convert an object to JSON string.
+
+        :returns string: The JSON string representation of the object.
+        """
+        return json.dumps(self.to_dict())
 
     def inflate_to_dict(self, session=None):
         """Convert an object to dictionary, with relationships inflated.
