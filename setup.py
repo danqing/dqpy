@@ -2,7 +2,7 @@
 
 from setuptools import find_packages, setup
 
-__version__ = '1.0.2'
+__version__ = '1.1'
 
 requires = [
     'arrow==0.12.1',
@@ -24,6 +24,9 @@ setup(
     url='https://github.com/danqing/dqpy',
     packages=find_packages(),
     install_requires=requires,
+    entry_points={
+        'console_scripts': ['dbadmin=dq.dbadmin:main'],
+    },
     zip_safe=True,
     classifiers=(
         "Programming Language :: Python :: 3",

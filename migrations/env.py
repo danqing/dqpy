@@ -34,7 +34,7 @@ def run_migrations_offline():
 
     Calls to context.execute() here emit the given string to the script output.
     """
-    url = Config.get('mysql.url')
+    url = Config.get('sql.url')
     context.configure(url=url, target_metadata=target_metadata)
 
     with context.begin_transaction():
@@ -47,7 +47,7 @@ def run_migrations_online():
     In this scenario we need to create an Engine and associate a connection
     with the context.
     """
-    url = Config.get('mysql.url')
+    url = Config.get('sql.url')
     engine = engine_from_config(
         configuration={},
         url=url,

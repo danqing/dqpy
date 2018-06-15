@@ -7,15 +7,15 @@ bootstrap:
 
 .PHONY: create-db
 create-db:
-	python3 scripts/database.py create
+	@dbadmin create
 
 .PHONY: drop-db
 drop-db:
-	python3 scripts/database.py drop
+	@dbadmin drop
 
 .PHONY: migrate-db
 migrate-db:
-	alembic upgrade head
+	@alembic upgrade head
 
 .PHONY: bootstrap-db
 bootstrap-db: drop-db create-db migrate-db
