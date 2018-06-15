@@ -15,12 +15,13 @@ from dq.logging import error
 logger = logging.getLogger(__name__)
 
 engine = create_engine(
-    Config.get('mysql.url'),
+    Config.get('sql.url'),
     pool_recycle=600,
     pool_pre_ping=True,
     isolation_level='READ COMMITTED',
 )
-Insert.argument_for('mysql', 'replace_insert', None)
+if Config.get('sql.flavor') == 'mysql':
+    Insert.argument_for('mysql', 'replace_insert', None)
 
 
 def session_maker():
@@ -38,7 +39,8 @@ Session = session_maker()
 def replace_insert(insert, compiler, **kw):
     """Allow replace into for insert command.
 
-    This only works for MySQL (which we use). It's not standard SQL.
+    This only works for MySQL. It's not standard SQL. To enable this function,
+    the sql.flavor config must be set to mysql.
     """
     s = compiler.visit_insert(insert, **kw)
     if 'mysql_replace_insert' in insert.kwargs:
