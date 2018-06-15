@@ -43,7 +43,7 @@ This module is designed to be used as a shell script, for creating and dropping 
    dbadmin drop    # Drop the above database
    dbadmin create another_sql.url  # Create a database with URL at anothersql.url
 
-.. automodule:: dq.database
+.. automodule:: dq.dbadmin
    :members:
 
 Email
