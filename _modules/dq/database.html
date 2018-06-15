@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>dq.database &#8212; dqpy 1.0.2 documentation</title>
+    <title>dq.database &#8212; dqpy 1.1 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" src="../../_static/documentation_options.js"></script>
@@ -47,12 +47,13 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span>
-    <span class="n">Config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;mysql.url&#39;</span><span class="p">),</span>
+    <span class="n">Config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;sql.url&#39;</span><span class="p">),</span>
     <span class="n">pool_recycle</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span>
     <span class="n">pool_pre_ping</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">isolation_level</span><span class="o">=</span><span class="s1">&#39;READ COMMITTED&#39;</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">Insert</span><span class="o">.</span><span class="n">argument_for</span><span class="p">(</span><span class="s1">&#39;mysql&#39;</span><span class="p">,</span> <span class="s1">&#39;replace_insert&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">Config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;sql.flavor&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;mysql&#39;</span><span class="p">:</span>
+    <span class="n">Insert</span><span class="o">.</span><span class="n">argument_for</span><span class="p">(</span><span class="s1">&#39;mysql&#39;</span><span class="p">,</span> <span class="s1">&#39;replace_insert&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="session_maker"><a class="viewcode-back" href="../../index.html#dq.database.session_maker">[docs]</a><span class="k">def</span> <span class="nf">session_maker</span><span class="p">():</span>
@@ -70,7 +71,8 @@
 <span class="k">def</span> <span class="nf">replace_insert</span><span class="p">(</span><span class="n">insert</span><span class="p">,</span> <span class="n">compiler</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Allow replace into for insert command.</span>
 
-<span class="sd">    This only works for MySQL (which we use). It&#39;s not standard SQL.</span>
+<span class="sd">    This only works for MySQL. It&#39;s not standard SQL. To enable this function,</span>
+<span class="sd">    the sql.flavor config must be set to mysql.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">compiler</span><span class="o">.</span><span class="n">visit_insert</span><span class="p">(</span><span class="n">insert</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
     <span class="k">if</span> <span class="s1">&#39;mysql_replace_insert&#39;</span> <span class="ow">in</span> <span class="n">insert</span><span class="o">.</span><span class="n">kwargs</span><span class="p">:</span>
