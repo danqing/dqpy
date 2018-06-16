@@ -32,6 +32,20 @@ SQL database client. This module provides connectors to the SQL database, with i
    :undoc-members:
    :show-inheritance:
 
+DBAdmin
+-------
+
+This module is designed to be used as a shell script, for creating and dropping the database.
+
+.. code-block:: bash
+
+   dbadmin create  # Create a database with URL at sql.url
+   dbadmin drop    # Drop the above database
+   dbadmin create another_sql.url  # Create a database with URL at anothersql.url
+
+.. automodule:: dq.dbadmin
+   :members:
+
 Email
 -----
 
