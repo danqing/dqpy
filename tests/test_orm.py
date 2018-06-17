@@ -152,7 +152,7 @@ class TestORM(unittest.TestCase):
         save_to_database([t21, t22, t23, t24, t25])
 
         results = Table2.get_multi('key', 1, 'key2', offset=2, limit=2)
-        assert len(results) == 3
+        assert len(results) == 2
         assert results[0].key2 == 3
         assert results[1].key2 == 2
 
@@ -190,6 +190,6 @@ class TestORM(unittest.TestCase):
         save_to_database([t21, t22, t23, t24, t25])
 
         results = Table2.get_by_user(uuid, offset=2, limit=2)
-        assert len(results) == 3
+        assert len(results) == 2
         assert results[0].key2 == 3
         assert results[1].key2 == 2
