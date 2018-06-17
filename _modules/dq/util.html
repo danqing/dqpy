@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>dq.entity &#8212; dqpy 1.2 documentation</title>
+    <title>dq.util &#8212; dqpy 1.2 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" src="../../_static/documentation_options.js"></script>
@@ -29,23 +29,18 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <h1>Source code for dq.entity</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">schematics.models</span> <span class="k">import</span> <span class="n">Model</span>
+  <h1>Source code for dq.util</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="safe_cast"><a class="viewcode-back" href="../../index.html#dq.util.safe_cast">[docs]</a><span></span><span class="k">def</span> <span class="nf">safe_cast</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">to_type</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Cast a value to another type safely.</span>
 
-
-<div class="viewcode-block" id="Entity"><a class="viewcode-back" href="../../index.html#dq.entity.Entity">[docs]</a><span class="k">class</span> <span class="nc">Entity</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Base entity class that provides shared utilities.</span>
-
-<span class="sd">    Currently it only allows printing a schematics entity. More utilities</span>
-<span class="sd">    may be added in the future. In any case, all entities should inherit from</span>
-<span class="sd">    this class.</span>
+<span class="sd">    :param value: The original value.</span>
+<span class="sd">    :param type to_type: The destination type.</span>
+<span class="sd">    :param default: The default value.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
-
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s1">&#39;&lt;</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&gt;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_primitive</span><span class="p">())</span></div>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">to_type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">default</span></div>
 </pre></div>
 
           </div>
