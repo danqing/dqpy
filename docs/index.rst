@@ -133,3 +133,13 @@ String utilities that you may find useful.
    :members:
    :undoc-members:
    :show-inheritance:
+
+Util
+----
+
+General utilities that you may find useful.
+
+.. automodule:: dq.util
+   :members:
+   :undoc-members:
+   :show-inheritance:
