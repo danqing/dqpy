@@ -6,10 +6,10 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>dqpy &#8212; dqpy 1.2 documentation</title>
+    <title>dqpy &#8212; dqpy 1.3.1 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
@@ -27,6 +27,8 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <div class="section" id="dqpy">
@@ -332,6 +334,134 @@ If retrying gives no luck, this is considered a 500 error.</p>
 <em class="property">exception </em><code class="descclassname">dq.errors.</code><code class="descname">UnauthorizedError</code><span class="sig-paren">(</span><em>message='Unauthorized'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/errors.html#UnauthorizedError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.errors.UnauthorizedError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#dq.errors.DQError" title="dq.errors.DQError"><code class="xref py py-class docutils literal notranslate"><span class="pre">dq.errors.DQError</span></code></a></p>
 <p>Exception raised when the user is not authenticated for an action.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="fsutil">
+<h2>FSUtil<a class="headerlink" href="#fsutil" title="Permalink to this headline">¶</a></h2>
+<p>The fsutil module contains file and file system helpers.</p>
+<span class="target" id="module-dq.fsutil"></span><dl class="function">
+<dt id="dq.fsutil.fileinfo">
+<code class="descclassname">dq.fsutil.</code><code class="descname">fileinfo</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/fsutil.html#fileinfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.fsutil.fileinfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Information of a file.</p>
+<p>This function throws an error if the path is not a valid file. To suppress
+errors, use <code class="docutils literal notranslate"><span class="pre">safe_fileinfo</span></code> instead.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> (<em>string</em>) – The path to the file.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Returns string mime:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">The MIME type of the file, such as text/plain.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">Returns int size:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">The size (in bytes) of the file.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Returns string encoding:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">The encoding of the file, like gzip. This is
+suitable for use as the Content-Encoding header.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="dq.fsutil.mkdirp">
+<code class="descclassname">dq.fsutil.</code><code class="descname">mkdirp</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/fsutil.html#mkdirp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.fsutil.mkdirp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Safely mkdir, creating all parent folders if they don’t yet exist.</p>
+<p>This doesn’t raise an error if the folder already exists. However, it does
+raise <code class="docutils literal notranslate"><span class="pre">FileExistsError</span></code> if the path points to an existing file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> (<em>string</em>) – The path to the folder to be created.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="dq.fsutil.rmrf">
+<code class="descclassname">dq.fsutil.</code><code class="descname">rmrf</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/fsutil.html#rmrf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.fsutil.rmrf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove a path like rm -rf.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> (<em>string</em>) – The path to remove.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="dq.fsutil.safe_fileinfo">
+<code class="descclassname">dq.fsutil.</code><code class="descname">safe_fileinfo</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/fsutil.html#safe_fileinfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.fsutil.safe_fileinfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrive information of a file without throwing an error.</p>
+<p>If the path is invalid, None, 0, None will be returned.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>path</strong> (<em>string</em>) – The path to the file.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Returns string mime:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">The MIME type of the file, such as text/plain.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">Returns int size:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">The size (in bytes) of the file.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Returns string encoding:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">The encoding of the file, like gzip. This is
+suitable for use as the Content-Encoding header.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="dq.fsutil.traverse">
+<code class="descclassname">dq.fsutil.</code><code class="descname">traverse</code><span class="sig-paren">(</span><em>path</em>, <em>callback</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/fsutil.html#traverse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.fsutil.traverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Traverse a directory recursively, performing a task.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>path</strong> (<em>string</em>) – The path of the directory.</li>
+<li><strong>callback</strong> (<em>func</em>) – A callback applied to each child file and directory.
+It takes 2 arguments, the relative path from the root, and whether the
+item is a directory.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="funcutil">
+<h2>FuncUtil<a class="headerlink" href="#funcutil" title="Permalink to this headline">¶</a></h2>
+<p>The funcutil module contains function helpers.</p>
+<span class="target" id="module-dq.funcutil"></span><dl class="function">
+<dt id="dq.funcutil.safe_invoke">
+<code class="descclassname">dq.funcutil.</code><code class="descname">safe_invoke</code><span class="sig-paren">(</span><em>noreturn=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/funcutil.html#safe_invoke"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.funcutil.safe_invoke" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invoke a function safely.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>noreturn</strong> (<em>boolean</em>) – Whether the function being called has no return
+value itself. Default to False. If True and the function returns
+successfully, True will be returned. None will be returned upon failure
+no matter whether the function has return value.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns func:</th><td class="field-body">The decorator function that provides safe invocation.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -1348,6 +1478,7 @@ This prevents us from directory traversal attacks.</p>
 
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -1361,6 +1492,8 @@ This prevents us from directory traversal attacks.</p>
 <li><a class="reference internal" href="#email">Email</a></li>
 <li><a class="reference internal" href="#entity">Entity</a></li>
 <li><a class="reference internal" href="#errors">Errors</a></li>
+<li><a class="reference internal" href="#fsutil">FSUtil</a></li>
+<li><a class="reference internal" href="#funcutil">FuncUtil</a></li>
 <li><a class="reference internal" href="#logging">Logging</a></li>
 <li><a class="reference internal" href="#orm">ORM</a></li>
 <li><a class="reference internal" href="#redis">Redis</a></li>
@@ -1404,8 +1537,8 @@ This prevents us from directory traversal attacks.</p>
       &copy; 2018 Danqing Liu.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.4</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
       
       |
       <a href="_sources/index.rst.txt"
