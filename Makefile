@@ -23,6 +23,7 @@ bootstrap-db: drop-db create-db migrate-db
 
 .PHONY: build
 build:
+	@rm -rf build dist
 	@python3 setup.py sdist bdist_wheel
 
 .PHONY: upload
