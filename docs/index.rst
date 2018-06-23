@@ -76,6 +76,26 @@ The errors module contains a bunch of error classes so we don't need to redefine
    :undoc-members:
    :show-inheritance:
 
+FSUtil
+------
+
+The fsutil module contains file and file system helpers.
+
+.. automodule:: dq.fsutil
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+FuncUtil
+--------
+
+The funcutil module contains function helpers.
+
+.. automodule:: dq.funcutil
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Logging
 -------
 
