@@ -49,3 +49,12 @@ class TestUtil(unittest.TestCase):
 
         util.traverse('test-files', callback)
         assert tree == {'1': True, '1/2': True, '1/2/3.txt': False}
+
+    def test_fileinfo(self):
+        util.mkdirp('test-files')
+        with open('test-files/a.txt', 'w') as f:
+            f.write('hello')
+        assert util.fileinfo('test-files/a.txt') == ('text/plain', 5, None)
+
+    def test_safe_fileinfo(self):
+        assert util.safe_fileinfo(None) == (None, 0, None)
