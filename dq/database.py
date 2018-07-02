@@ -122,3 +122,18 @@ def safe_save_to_database(model, session=None):
     :returns boolean: True if the operation is successful.
     """
     unsafe_save_to_database(model, session=session)
+
+
+def query_with_limit_offset(query, limit, offset):
+    """Add limit and offset constraints to a SQLAlchemy query.
+
+    :param Query query: A SQLAlchemy query.
+    :param int limit: The limit to add. If None or 0, it will be skipped.
+    :param int offset: The offset to add. If None or 0, it will be skipped.
+    :returns Query: The updated query object.
+    """
+    if limit:
+        query = query.limit(limit)
+    if offset:
+        query = query.offset(offset)
+    return query

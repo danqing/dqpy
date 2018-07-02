@@ -11,7 +11,7 @@ from sqlalchemy.ext.declarative import as_declarative
 from sqlalchemy_utils import ArrowType
 
 from dq.config import Config
-from dq.database import Session
+from dq.database import query_with_limit_offset, Session
 from dq.logging import error
 
 logger = logging.getLogger(__name__)
@@ -328,11 +328,7 @@ class QueryMixin(object):
         if sort_column:
             attr = getattr(cls, sort_column)
             q = q.order_by(attr.desc()) if desc else q.order_by(attr.asc())
-        if limit:
-            q = q.limit(limit + 1)
-        if offset:
-            q = q.offset(offset)
-        return q.all()
+        return query_with_limit_offset(q, limit, offset).all()
 
 
 class UserRelationMixin(QueryMixin):
