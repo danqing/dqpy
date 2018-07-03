@@ -7,11 +7,11 @@ __version__ = '1.3.2'
 requires = [
     'arrow==0.12.1',
     'emails==0.5.15',
-    'PyMySQL==0.9.0',
+    'PyMySQL==0.9.1',
     'redis==2.10.6',
     'schematics==2.1.0',
     'SQLAlchemy-Utils==0.33.3',
-    'SQLAlchemy==1.2.8',
+    'SQLAlchemy==1.2.9',
     'toml==0.9.4',
 ]
 
