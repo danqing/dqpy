@@ -18,7 +18,6 @@ engine = create_engine(
     Config.get('sql.url'),
     pool_recycle=600,
     pool_pre_ping=True,
-    isolation_level='READ COMMITTED',
 )
 if Config.get('sql.flavor') == 'mysql':
     Insert.argument_for('mysql', 'replace_insert', None)
