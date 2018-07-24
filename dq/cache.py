@@ -1,4 +1,5 @@
 import logging
+from functools import wraps
 
 from dq.config import Config
 from dq.logging import error
@@ -15,12 +16,20 @@ def _init_redis():
         # This will attempt to connect to Redis and throw an error if the
         # connection is invalid.
         i.info()
-        cls._instance = i
         return i
     except Exception:
         error(logger, 'Unable to connect to cache Redis', None)
-        cls._attempted = True
         return None
 
 
 _redis = _init_redis()
+
+
+def cache(ttl=600, key_func=None):
+    def memoize(func):
+        @wraps(func)
+        def decorated_func(*args, **kwargs):
+            return func(*args, **kwargs)
+
+        return decorated_func
+    return memoize

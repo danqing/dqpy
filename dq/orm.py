@@ -16,8 +16,6 @@ from dq.logging import error
 
 logger = logging.getLogger(__name__)
 
-SERVICE_NAME = Config.get('meta.name')
-
 # An attribute of a model. The order is the following:
 # - name (string): The name of the attribute (the key)
 # - allow_from (boolean): Whether the attribute can be inflated with incoming
@@ -162,69 +160,6 @@ class TimeMixin(object):
     deleted_at = Column(ArrowType)
 
 
-class Cache(object):
-    """Redis cache engine. This should not be used externally!
-
-    This is a separate Redis connection from the one in the redis package. The
-    purpose is twofold:
-
-    1. The cache Redis does not allow response decoding, but the user Redis
-       requires it.
-    2. By separating the two, if a project does not have an explicit cache
-       configuration, then cache can be effectively disabled globally.
-    """
-
-    _instance = None
-    _attempted = False
-
-    @classmethod
-    def instance(cls):
-        if cls._instance:
-            return cls._instance
-        if cls._attempted:
-            return None
-        cachecfg = Config.get('cache')
-        if not cachecfg:
-            cls._attempted = True
-            return None
-        try:
-            i = redis.StrictRedis(**cachecfg)
-            # This will attempt to connect to Redis and throw an error if the
-            # connection is invalid.
-            i.info()
-            cls._instance = i
-            return i
-        except Exception:
-            error(logger, 'Unable to connect to cache Redis', None)
-            cls._attempted = True
-            return None
-
-    @classmethod
-    def get(cls, key):
-        """Get the value corresponding to the key in the cache.
-
-        :param string key: The cache key.
-        :returns bytes: The cache value in raw bytes if exists. If the key does
-            not exist or if cache server cannot be reached, returns ``None``.
-        """
-        i = cls.instance()
-        try:
-            return i.get(key) if i else None
-        except Exception as e:
-            error(logger, 'Error querying cache', {'key': key, 'error': e})
-            return None
-
-    @classmethod
-    def set(cls, key, value, ttl):
-        i = cls.instance()
-        if not i:
-            return
-        try:
-            i.setex(key, ttl, pickle.dumps(value))
-        except Exception as e:
-            error(logger, 'Error setting cache', {'key': key, 'error': e})
-
-
 class QueryMixin(object):
     """Query helper functions useful to all models.
 
@@ -233,36 +168,8 @@ class QueryMixin(object):
     """
 
     @classmethod
-    def cache_key(cls, column, value, contains_deleted=False,
-                  contains_empty=False):
-        key = '{}.cache.{}.{}.{}'.format(
-            SERVICE_NAME, cls.__tablename__, column, value,
-        )
-        if contains_deleted:
-            key += '.del'
-        if contains_empty:
-            key += '.empty'
-        return key
-
-    @classmethod
-    def get_cache(cls, column, value, contains_deleted=False,
-                  contains_empty=False):
-        """Get the object from cache."""
-        key = cls.cache_key(column, value, contains_deleted=contains_deleted,
-                            contains_empty=contains_empty)
-        cached = Cache.get(key)
-        return pickle.loads(cached) if cached else None
-
-    @classmethod
-    def save_to_cache(cls, obj, column, value, ttl=3600,
-                      contains_deleted=False, contains_empty=False):
-        key = cls.cache_key(column, value, contains_deleted=contains_deleted,
-                            contains_empty=contains_empty)
-        Cache.set(key, obj, ttl)
-
-    @classmethod
     def get_by(cls, column, value, contains_deleted=False,
-               contains_empty=False, ttl=3600, fresh=False, session=None):
+               contains_empty=False, session=None):
         """Get the object satisfying the query condition.
 
         :param string column: The name of the column to query by.
@@ -272,8 +179,6 @@ class QueryMixin(object):
         :param boolean contains_empty: Whether to contain empty records.
             Default is ``False`` and if value is ``None``, ``None`` will be
             returned.
-        :param int ttl: The TTL of cache. If < 0, no cache will be used.
-        :param boolean fresh: Whether to fetch the response fresh from the DB.
         :param Session session: Optional SQL session.
         :returns QueryMixin: The matching object. This method is designed for
             unique queries and in case of multiple matches, only the first one
@@ -282,25 +187,12 @@ class QueryMixin(object):
         if not contains_empty and value is None:
             return None
 
-        if ttl > 0 and not fresh:
-            cached = cls.get_cache(
-                column, value, contains_deleted=contains_deleted,
-                contains_empty=contains_empty,
-            )
-            if cached:
-                return cached
-
         session = session or Session()
         args = {}
         args[column] = value
         if not contains_deleted:
             args['deleted_at'] = None
-        obj = session.query(cls).filter_by(**args).first()
-        if obj and ttl > 0:
-            cls.save_to_cache(obj, column, value, ttl=ttl,
-                              contains_deleted=contains_deleted,
-                              contains_empty=contains_empty)
-        return obj
+        return session.query(cls).filter_by(**args).first()
 
     @classmethod
     def get_multi(cls, column, value, sort_column='updated_at', desc=True,
@@ -373,21 +265,16 @@ class IDBase(QueryMixin, DictMixin, TimeMixin):
     id = Column(Integer, primary_key=True)
 
     @classmethod
-    def get(cls, id, contains_deleted=False, ttl=3600, fresh=False,
-            session=None):
+    def get(cls, id, contains_deleted=False, session=None):
         """Get an object by its ID.
 
         :param int id: The ID of the object.
         :param boolean contains_deleted: Whether to contain deleted objects.
             Default is ``False``.
-        :param int ttl: Cache TTL in seconds. If <= 0 no cache will be used.
-            Default is 3600 (1 hour).
-        :param boolean fresh: Whether to fetch a fresh copy even if cache
-            exists. Default is ``False``.
         :param Session session: Optional SQL session to use.
         """
         return cls.get_by('id', id, contains_deleted=contains_deleted,
-                          fresh=fresh, session=session)
+                          session=session)
 
 
 @as_declarative()
@@ -401,18 +288,13 @@ class UUIDBase(QueryMixin, DictMixin, TimeMixin):
     uuid = Column(String, primary_key=True, default=uuid4_string)
 
     @classmethod
-    def get(cls, uuid, contains_deleted=False, ttl=3600, fresh=False,
-            session=None):
+    def get(cls, uuid, contains_deleted=False, session=None):
         """Get an object by its UUID.
 
         :param string uuid: The UUID of the object.
         :param boolean contains_deleted: Whether to contain deleted objects.
             Default is ``False``.
-        :param int ttl: Cache TTL in seconds. If <= 0 no cache will be used.
-            Default is 3600 (1 hour).
-        :param boolean fresh: Whether to fetch a fresh copy even if cache
-            exists. Default is ``False``.
         :param Session session: Optional SQL session to use.
         """
         return cls.get_by('uuid', uuid, contains_deleted=contains_deleted,
-                          fresh=fresh, session=session)
+                          session=session)
