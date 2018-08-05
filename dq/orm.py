@@ -1,4 +1,3 @@
-import logging
 import json
 from collections import namedtuple
 from uuid import uuid4
