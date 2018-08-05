@@ -1,6 +1,8 @@
 import logging
 from functools import wraps
 
+import redis
+
 from dq.config import Config
 from dq.logging import error
 
@@ -12,7 +14,7 @@ def _init_redis():
     if not cfg:
         return None
     try:
-        i = redis.StrictRedis(**cachecfg)
+        i = redis.StrictRedis(**cfg)
         # This will attempt to connect to Redis and throw an error if the
         # connection is invalid.
         i.info()

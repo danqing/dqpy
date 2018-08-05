@@ -1,20 +1,14 @@
 import logging
 import json
-import pickle
 from collections import namedtuple
 from uuid import uuid4
 
 import arrow
-import redis
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import as_declarative
 from sqlalchemy_utils import ArrowType
 
-from dq.config import Config
 from dq.database import query_with_limit_offset, Session
-from dq.logging import error
-
-logger = logging.getLogger(__name__)
 
 # An attribute of a model. The order is the following:
 # - name (string): The name of the attribute (the key)
