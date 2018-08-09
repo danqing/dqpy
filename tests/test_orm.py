@@ -8,7 +8,6 @@ from uuid import uuid4
 import arrow
 
 from dq.database import commit_scope, save_to_database
-from dq.orm import Cache
 from tests.models import Table2, User, UserType
 
 
@@ -18,8 +17,6 @@ class TestORM(unittest.TestCase):
         with suppress(Exception), commit_scope() as session:
             session.query(Table2).delete()
             session.query(User).delete()
-            if Cache._instance:
-                Cache._instance.flushall()
 
     def test_string(self):
         t2 = Table2(id=1, key=1, key2=1, user_type=UserType.admin,
