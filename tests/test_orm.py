@@ -137,6 +137,18 @@ class TestORM(unittest.TestCase):
         t2 = Table2.get_by('user_uuid', uuid)
         assert t2.id == 1
 
+    def test_get_by_for_update(self):
+        uuid = str(uuid4())
+        t2 = Table2(id=1, user_uuid=uuid)
+        save_to_database(t2)
+
+        t2 = Table2.get_by('user_uuid', uuid, for_update=True)
+        assert t2.id == 1
+        t2.key2 = 10
+        save_to_database(t2)
+        t2 = Table2.get_by('user_uuid', uuid, fresh=True)
+        assert t2.key2 == 10
+
     def test_get_by_empty(self):
         t2 = Table2(id=1, user_uuid=str(uuid4()))
         save_to_database(t2)
