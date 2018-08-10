@@ -161,12 +161,13 @@ class QueryMixin(object):
     """
 
     @classmethod
-    def get_by(cls, column, value, contains_deleted=False,
+    def get_by(cls, column, value, for_update=False, contains_deleted=False,
                contains_empty=False, session=None):
         """Get the object satisfying the query condition.
 
         :param string column: The name of the column to query by.
         :param string value: The value of the column to query for.
+        :param boolean for_update: Whether the query is for updating the row.
         :param boolean contains_deleted: Whether to contain deleted records.
             Default is ``False`` and only active records are returned.
         :param boolean contains_empty: Whether to contain empty records.
@@ -185,7 +186,10 @@ class QueryMixin(object):
         args[column] = value
         if not contains_deleted:
             args['deleted_at'] = None
-        return session.query(cls).filter_by(**args).first()
+        query = session.query(cls).filter_by(**args)
+        if for_update:
+            query = query.with_for_update()
+        return query.first()
 
     @classmethod
     def get_multi(cls, column, value, sort_column='updated_at', desc=True,

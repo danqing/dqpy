@@ -58,6 +58,8 @@ def commit_scope(session=None):
     except Exception:
         with safe_reraise():
             session.rollback()
+    finally:
+        session.close()
 
 
 def unsafe_save_to_database(model, session=None):

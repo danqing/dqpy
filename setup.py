@@ -11,7 +11,7 @@ requires = [
     'redis==2.10.6',
     'schematics==2.1.0',
     'SQLAlchemy-Utils==0.33.3',
-    'SQLAlchemy==1.2.9',
+    'SQLAlchemy==1.2.10',
     'toml==0.9.4',
 ]
 
