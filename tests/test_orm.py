@@ -1,6 +1,5 @@
 import ast
 import json
-import mock
 import unittest
 from contextlib import suppress
 from uuid import uuid4
