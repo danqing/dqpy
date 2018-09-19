@@ -8,7 +8,7 @@ class DQError(Exception):
 
     4xx errors are due to the user, and as such the message will be passed
     directly back to user. 5xx errors will have the message replaced by the
-    generic 'DQ Error' before sending back to user.
+    generic 'Internal Error' before sending back to user.
     """
 
     def __init__(self, message='', status_code=None, error_code=None):
@@ -28,7 +28,7 @@ class DQError(Exception):
         return code + message
 
     def to_dict(self):
-        message = self.message if self.status_code < 500 else 'DQ Error'
+        message = self.message if self.status_code < 500 else 'Internal Error'
         return {'error': message}
 
 
@@ -52,6 +52,13 @@ class ModelError(DQError):
 
 class IntegrationError(DQError):
     """Exception raised when there is a service integration error."""
+
+    def __init__(self, message):
+        DQError.__init__(self, message=message, status_code=500)
+
+
+class InternalError(DQError):
+    """Exception raised when there is an internal server error."""
 
     def __init__(self, message):
         DQError.__init__(self, message=message, status_code=500)

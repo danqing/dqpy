@@ -9,7 +9,7 @@ class TestErrors(unittest.TestCase):
         e = errors.RecoverableError('recoverable')
         assert e.status_code == 500
         assert e.message == 'recoverable'
-        assert e.to_dict() == {'error': 'DQ Error'}
+        assert e.to_dict() == {'error': 'Internal Error'}
         assert e.__str__() == '500 - recoverable'
         assert e.__repr__() == (
             '<RecoverableError - status: 500, message: recoverable>')
@@ -21,6 +21,12 @@ class TestErrors(unittest.TestCase):
 
     def test_integration_error(self):
         e = errors.IntegrationError(None)
+        assert e.status_code == 500
+        assert not e.message
+        assert e.__str__() == '500 - Unspecified DQ Error'
+
+    def test_internal_error(self):
+        e = errors.InternalError(None)
         assert e.status_code == 500
         assert not e.message
         assert e.__str__() == '500 - Unspecified DQ Error'
