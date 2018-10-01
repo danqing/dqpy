@@ -24,13 +24,21 @@ class TestRedis(unittest.TestCase):
         assert Redis.delete(key)
         assert not Redis.get(key)
 
-    def test_get_json(self):
+    def test_get_json_string(self):
         key = 'dqtest-{}'.format(uuid4())
         assert not Redis.get(key)
         Redis.setex(key, [1, '2', True], 1)
         assert Redis.get(key) == '[1, "2", true]'
         Redis.setex(key, {'cornell': '#1'}, 1)
         assert Redis.get(key) == '{"cornell": "#1"}'
+
+    def test_get_json(self):
+        key = 'dqtest-{}'.format(uuid4())
+        assert not Redis.get(key)
+        Redis.setex(key, [1, '2', True], 1)
+        assert Redis.get_json(key) == [1, '2', True]
+        Redis.setex(key, {'cornell': '#1'}, 1)
+        assert Redis.get_json(key) == {'cornell': '#1'}
 
     def test_expire(self):
         key = 'dqtest-{}'.format(uuid4())

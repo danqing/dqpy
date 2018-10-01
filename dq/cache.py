@@ -30,6 +30,20 @@ _redis = _init_redis()
 
 
 def cache(ttl=600, key_func=None):
+    """Cache decorator.
+
+    This can be applied to any function that returns a JSON-serializable
+    response. To allow caching, the ``cache`` key must be set in the config,
+    namely the redis connection for cache.
+
+    If the function has a keyword argument named ``fresh``, then the decorator
+    gets a fresh copy when it's set to a truthy value.
+
+    :param number ttl: The TTL in second. Default is 10 minutes.
+    :param func key_func: The key function. This function should take the same
+        arguments as the wrapped function, and return the corresponding cache
+        key as a string.
+    """
     def memoize(func):
         @wraps(func)
         def decorated_func(*args, **kwargs):
