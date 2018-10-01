@@ -56,6 +56,17 @@ class Redis(object):
         return cls._instance.get(key)
 
     @classmethod
+    def get_json(cls, key):
+        """Get the value stored at the key as JSON.
+
+        :param string key: The Redis key.
+        :returns object: The value of the key as an unserialized JSON object.
+            If the key does not exist, ``None`` will be returned.
+        """
+        resp = cls.get(key)
+        return json.loads(resp) if resp else None
+
+    @classmethod
     def set(cls, key, value):
         """Set the key to the specified value.
 
