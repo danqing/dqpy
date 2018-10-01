@@ -262,16 +262,17 @@ class IDBase(QueryMixin, DictMixin, TimeMixin):
     id = Column(Integer, primary_key=True)
 
     @classmethod
-    def get(cls, id, contains_deleted=False, session=None):
+    def get(cls, id, for_update=False, contains_deleted=False, session=None):
         """Get an object by its ID.
 
         :param int id: The ID of the object.
+        :param boolean for_update: Whether the query is for updating the row.
         :param boolean contains_deleted: Whether to contain deleted objects.
             Default is ``False``.
         :param Session session: Optional SQL session to use.
         """
-        return cls.get_by('id', id, contains_deleted=contains_deleted,
-                          session=session)
+        return cls.get_by('id', id, for_update=for_update,
+                          contains_deleted=contains_deleted, session=session)
 
 
 @as_declarative()
@@ -285,13 +286,14 @@ class UUIDBase(QueryMixin, DictMixin, TimeMixin):
     uuid = Column(String, primary_key=True, default=uuid4_string)
 
     @classmethod
-    def get(cls, uuid, contains_deleted=False, session=None):
+    def get(cls, uuid, for_update=False, contains_deleted=False, session=None):
         """Get an object by its UUID.
 
         :param string uuid: The UUID of the object.
+        :param boolean for_update: Whether the query is for updating the row.
         :param boolean contains_deleted: Whether to contain deleted objects.
             Default is ``False``.
         :param Session session: Optional SQL session to use.
         """
-        return cls.get_by('uuid', uuid, contains_deleted=contains_deleted,
-                          session=session)
+        return cls.get_by('uuid', uuid, for_update=for_update,
+                          contains_deleted=contains_deleted, session=session)
