@@ -10,8 +10,8 @@ requires = [
     'PyMySQL==0.9.2',
     'redis==2.10.6',
     'schematics==2.1.0',
-    'SQLAlchemy-Utils==0.33.4',
-    'SQLAlchemy==1.2.11',
+    'SQLAlchemy-Utils==0.33.5',
+    'SQLAlchemy==1.2.12',
     'toml==0.9.6',
 ]
 
