@@ -2,7 +2,7 @@
 
 from setuptools import find_packages, setup
 
-__version__ = '1.3.2'
+__version__ = '2.0.0'
 
 requires = [
     'arrow==0.12.1',
@@ -10,9 +10,9 @@ requires = [
     'PyMySQL==0.9.2',
     'redis==2.10.6',
     'schematics==2.1.0',
-    'SQLAlchemy-Utils==0.33.3',
-    'SQLAlchemy==1.2.10',
-    'toml==0.9.4',
+    'SQLAlchemy-Utils==0.33.5',
+    'SQLAlchemy==1.2.12',
+    'toml==0.9.6',
 ]
 
 setup(

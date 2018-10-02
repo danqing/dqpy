@@ -1,6 +1,5 @@
 import ast
 import json
-import mock
 import unittest
 from contextlib import suppress
 from uuid import uuid4
@@ -8,7 +7,6 @@ from uuid import uuid4
 import arrow
 
 from dq.database import commit_scope, save_to_database
-from dq.orm import Cache
 from tests.models import Table2, User, UserType
 
 
@@ -18,8 +16,6 @@ class TestORM(unittest.TestCase):
         with suppress(Exception), commit_scope() as session:
             session.query(Table2).delete()
             session.query(User).delete()
-            if Cache._instance:
-                Cache._instance.flushall()
 
     def test_string(self):
         t2 = Table2(id=1, key=1, key2=1, user_type=UserType.admin,
@@ -33,56 +29,6 @@ class TestORM(unittest.TestCase):
             'key2': True,
             'created_at': 1508544000,
         }
-
-    def test_cache_key(self):
-        assert Table2.cache_key('uuid', '123') == 'dqpy.cache.table2.uuid.123'
-        k2 = Table2.cache_key('id', 123, contains_deleted=True,
-                              contains_empty=True)
-        assert k2 == 'dqpy.cache.table2.id.123.del.empty'
-
-    def test_cached(self):
-        t2 = Table2(id=999, user_uuid=str(uuid4()), key=1, key2=1,
-                    user_type=UserType.regular)
-        save_to_database(t2)
-
-        key = 'dqpy.cache.table2.id.999'
-        assert not Cache.get(key)
-
-        t2 = Table2.get(999)
-        assert t2.key == 1
-        assert Cache.get(key)
-        with commit_scope() as session:
-            session.query(Table2).delete()
-        t2 = Table2.get(999)
-        assert t2.key == 1
-
-    def test_cache_error(self):
-        Cache._instance = 123
-        assert not Cache.get('cornell')
-        Cache.set('cornell', '#1', 123)
-        Cache._instance = None
-
-    @mock.patch('dq.config.Config.get')
-    def test_cache_broken(self, mock_cfg):
-        mock_cfg.return_value = {'port': 1234}
-        Cache._instance = None
-        Cache._attempted = None
-        assert not Cache.instance()
-        assert Cache._attempted
-        assert not Cache.get('cornell')
-        Cache.set('cornell', '#1', 123)
-        Cache._attempted = None
-
-    @mock.patch('dq.config.Config.get')
-    def test_cache_none(self, mock_cfg):
-        mock_cfg.return_value = None
-        Cache._instance = None
-        Cache._attempted = None
-        assert not Cache.instance()
-        assert Cache._attempted
-        assert not Cache.get('cornell')
-        Cache.set('cornell', '#1', 123)
-        Cache._attempted = None
 
     def test_to_dict(self):
         uuid = str(uuid4())
@@ -146,7 +92,7 @@ class TestORM(unittest.TestCase):
         assert t2.id == 1
         t2.key2 = 10
         save_to_database(t2)
-        t2 = Table2.get_by('user_uuid', uuid, fresh=True)
+        t2 = Table2.get_by('user_uuid', uuid)
         assert t2.key2 == 10
 
     def test_get_by_empty(self):
