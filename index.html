@@ -40,14 +40,208 @@
 <div class="section" id="cache">
 <h2>Cache<a class="headerlink" href="#cache" title="Permalink to this headline">¶</a></h2>
 <p>The cache module provides a simple JSON and Redis based caching decorator.</p>
+<span class="target" id="module-dq.cache"></span><dl class="function">
+<dt id="dq.cache.cache">
+<code class="descclassname">dq.cache.</code><code class="descname">cache</code><span class="sig-paren">(</span><em>ttl=600</em>, <em>key_func=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/cache.html#cache"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.cache.cache" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cache decorator.</p>
+<p>This can be applied to any function that returns a raw or JSON-serializable
+response. To allow caching, the <code class="docutils literal notranslate"><span class="pre">cache</span></code> key must be set in the config,
+namely the redis connection for cache.</p>
+<p>If the function has a keyword argument named <code class="docutils literal notranslate"><span class="pre">fresh</span></code>, then the decorator
+gets a fresh copy when it’s set to a truthy value.</p>
+<p>If the function has a keyword argument named <code class="docutils literal notranslate"><span class="pre">raw</span></code>, then the decorator
+returns the raw (bytes) Redis response as-is, without JSON-deserializing.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ttl</strong> (<em>number</em>) – The TTL in second. Default is 10 minutes.</li>
+<li><strong>key_func</strong> (<em>func</em>) – The key function. This function should take the same
+arguments as the wrapped function, and return the corresponding cache
+key as a string.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <div class="section" id="config">
 <h2>Config<a class="headerlink" href="#config" title="Permalink to this headline">¶</a></h2>
 <p>The config module helps getting configurations from TOML files stored in the <code class="docutils literal notranslate"><span class="pre">config/</span></code> folder. The default file to use is <code class="docutils literal notranslate"><span class="pre">config/local.toml</span></code>. To use another file, specify the <code class="docutils literal notranslate"><span class="pre">DQENV</span></code> environment variable. For example, if <code class="docutils literal notranslate"><span class="pre">DQENV=production</span></code>, then the <code class="docutils literal notranslate"><span class="pre">config/production.toml</span></code> file will be used. Nested keys are comma-separated.</p>
+<span class="target" id="module-dq.config"></span><dl class="class">
+<dt id="dq.config.Config">
+<em class="property">class </em><code class="descclassname">dq.config.</code><code class="descname">Config</code><a class="reference internal" href="_modules/dq/config.html#Config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.config.Config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Configuration helper.</p>
+<dl class="classmethod">
+<dt id="dq.config.Config.get">
+<em class="property">classmethod </em><code class="descname">get</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/config.html#Config.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.config.Config.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the config value specified by the provided key.</p>
+<p>TOML config files should be stored in the config folder, and the
+environment (i.e. which file to choose) should be specified by the
+<code class="docutils literal notranslate"><span class="pre">DQENV</span></code> environment variable.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>string</em>) – The key to retrieve the value for. Nested key should
+have its components separated by dot, such as <code class="docutils literal notranslate"><span class="pre">owner.email</span></code>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The value of the key if it exists, and <code class="docutils literal notranslate"><span class="pre">None</span></code> otherwise.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="dq.config.Config.init">
+<em class="property">classmethod </em><code class="descname">init</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/config.html#Config.init"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.config.Config.init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the configuration.</p>
+<p>If the config file contains a dictionary keyed by <code class="docutils literal notranslate"><span class="pre">env</span></code>, all its
+content will be set as environment variables.</p>
+<p>This function should not be called externally. The <code class="docutils literal notranslate"><span class="pre">Config.get</span></code>
+function lazily initializes the config object automatically.</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 <div class="section" id="database">
 <h2>Database<a class="headerlink" href="#database" title="Permalink to this headline">¶</a></h2>
 <p>SQL database client. This module provides connectors to the SQL database, with its configs specified (by you) in the config files. Check out the <code class="docutils literal notranslate"><span class="pre">config/local.toml</span></code> file for an example configuration.</p>
+<span class="target" id="module-dq.database"></span><dl class="function">
+<dt id="dq.database.commit_scope">
+<code class="descclassname">dq.database.</code><code class="descname">commit_scope</code><span class="sig-paren">(</span><em>session=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/database.html#commit_scope"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.database.commit_scope" title="Permalink to this definition">¶</a></dt>
+<dd><p>Commit any database operations within this scope.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dq.database.query_with_limit_offset">
+<code class="descclassname">dq.database.</code><code class="descname">query_with_limit_offset</code><span class="sig-paren">(</span><em>query</em>, <em>limit</em>, <em>offset</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/database.html#query_with_limit_offset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.database.query_with_limit_offset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add limit and offset constraints to a SQLAlchemy query.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>query</strong> (<em>Query</em>) – A SQLAlchemy query.</li>
+<li><strong>limit</strong> (<em>int</em>) – The limit to add. If None or 0, it will be skipped.</li>
+<li><strong>offset</strong> (<em>int</em>) – The offset to add. If None or 0, it will be skipped.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns Query:</th><td class="field-body"><p class="first last">The updated query object.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="dq.database.replace_insert">
+<code class="descclassname">dq.database.</code><code class="descname">replace_insert</code><span class="sig-paren">(</span><em>insert</em>, <em>compiler</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/database.html#replace_insert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.database.replace_insert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allow replace into for insert command.</p>
+<p>This only works for MySQL. It’s not standard SQL. To enable this function,
+the sql.flavor config must be set to mysql.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dq.database.safe_save_to_database">
+<code class="descclassname">dq.database.</code><code class="descname">safe_save_to_database</code><span class="sig-paren">(</span><em>model</em>, <em>session=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/database.html#safe_save_to_database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.database.safe_save_to_database" title="Permalink to this definition">¶</a></dt>
+<dd><p>Safely write things to the database.</p>
+<p>This function simply calls <code class="docutils literal notranslate"><span class="pre">unsafe_save_to_database</span></code> under the hood, but
+returns whether the operation is successful instead of throwing an error
+upon failure.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>model</strong> (<em>object/list</em>) – The model object(s) to save. If a list is
+provided, the elements will be added one by one. Otherwise the object
+is added as-is.</li>
+<li><strong>session</strong> (<em>Session</em>) – The optional database session to use.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Returns boolean:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first last">True if the operation is successful.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="dq.database.save_to_database">
+<code class="descclassname">dq.database.</code><code class="descname">save_to_database</code><span class="sig-paren">(</span><em>model</em>, <em>session=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/database.html#save_to_database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.database.save_to_database" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write things to the database.</p>
+<p>This function simply calls <code class="docutils literal notranslate"><span class="pre">unsafe_save_to_database</span></code> under the hood, but
+wraps the error into a <code class="docutils literal notranslate"><span class="pre">ModelError</span></code> upon failure.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>model</strong> (<em>object/list</em>) – The model object(s) to save. If a list is
+provided, the elements will be added one by one. Otherwise the object
+is added as-is.</li>
+<li><strong>session</strong> (<em>Session</em>) – The optional database session to use.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#dq.errors.ModelError" title="dq.errors.ModelError"><strong>ModelError</strong></a> – if the save fails.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="dq.database.session_maker">
+<code class="descclassname">dq.database.</code><code class="descname">session_maker</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/database.html#session_maker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.database.session_maker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a scoped session. In general, use the Session global variable.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Returns Session:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body">A new SQLAlchemy session.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="dq.database.unsafe_save_to_database">
+<code class="descclassname">dq.database.</code><code class="descname">unsafe_save_to_database</code><span class="sig-paren">(</span><em>model</em>, <em>session=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/database.html#unsafe_save_to_database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.database.unsafe_save_to_database" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenient method for writing things to the database.</p>
+<p>If the object is a list, its elements will be written to the database one
+by one. If the object is already in the database (i.e. when we are updating
+existing records), the caller of this function is responsible of ensuring
+that the same session used when retrieving the records is passed in. If
+a different session is provided, this operation will fail. (This is
+usually not an issue for view functions, which have session consistency on
+a thread level.)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>model</strong> (<em>object/list</em>) – The model object(s) to save. If a list is
+provided, the elements will be added one by one. Otherwise the object
+is added as-is.</li>
+<li><strong>session</strong> (<em>Session</em>) – The optional database session to use.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <div class="section" id="dbadmin">
 <h2>DBAdmin<a class="headerlink" href="#dbadmin" title="Permalink to this headline">¶</a></h2>
@@ -57,14 +251,49 @@ dbadmin drop    <span class="c1"># Drop the above database</span>
 dbadmin create another_sql.url  <span class="c1"># Create a database with URL at anothersql.url</span>
 </pre></div>
 </div>
-</div>
+<span class="target" id="module-dq.dbadmin"></span></div>
 <div class="section" id="email">
 <h2>Email<a class="headerlink" href="#email" title="Permalink to this headline">¶</a></h2>
 <p>Module for sending emails.</p>
+<span class="target" id="module-dq.email"></span><dl class="function">
+<dt id="dq.email.send_email">
+<code class="descclassname">dq.email.</code><code class="descname">send_email</code><span class="sig-paren">(</span><em>to</em>, <em>subject</em>, <em>html</em>, <em>sender_name</em>, <em>sender_email</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/email.html#send_email"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.email.send_email" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send an email.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>to</strong> (<em>string</em>) – The recepient of the email.</li>
+<li><strong>subject</strong> (<em>string</em>) – The subject of the email.</li>
+<li><strong>html</strong> (<em>string</em>) – The HTML content of the email.</li>
+<li><strong>sender_name</strong> (<em>string</em>) – The name of the sender.</li>
+<li><strong>sender_email</strong> (<em>string</em>) – The sender address of the email.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Returns boolean:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first last">True if the email is sent successfully. False otherwise.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <div class="section" id="entity">
 <h2>Entity<a class="headerlink" href="#entity" title="Permalink to this headline">¶</a></h2>
 <p>The entity module provide basic functionalities for Schematics entity classes.</p>
+<span class="target" id="module-dq.entity"></span><dl class="class">
+<dt id="dq.entity.Entity">
+<em class="property">class </em><code class="descclassname">dq.entity.</code><code class="descname">Entity</code><span class="sig-paren">(</span><em>raw_data=None</em>, <em>trusted_data=None</em>, <em>deserialize_mapping=None</em>, <em>init=True</em>, <em>partial=True</em>, <em>strict=True</em>, <em>validate=False</em>, <em>app_data=None</em>, <em>lazy=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/entity.html#Entity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.entity.Entity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">schematics.deprecated.Model</span></code></p>
+<p>Base entity class that provides shared utilities.</p>
+<p>Currently it only allows printing a schematics entity. More utilities
+may be added in the future. In any case, all entities should inherit from
+this class.</p>
+</dd></dl>
+
 </div>
 <div class="section" id="errors">
 <h2>Errors<a class="headerlink" href="#errors" title="Permalink to this headline">¶</a></h2>
@@ -365,14 +594,804 @@ no matter whether the function has return value.</td>
 <div class="section" id="orm">
 <h2>ORM<a class="headerlink" href="#orm" title="Permalink to this headline">¶</a></h2>
 <p>The SQL ORM base classes. Your model classes should most likely inherit from <code class="docutils literal notranslate"><span class="pre">IDBase</span></code> or <code class="docutils literal notranslate"><span class="pre">UUIDBase</span></code>, and some other mixins.</p>
+<span class="target" id="module-dq.orm"></span><dl class="class">
+<dt id="dq.orm.Attr">
+<em class="property">class </em><code class="descclassname">dq.orm.</code><code class="descname">Attr</code><span class="sig-paren">(</span><em>name</em>, <em>allow_from</em>, <em>allow_to</em>, <em>serializer</em>, <em>deserializer</em><span class="sig-paren">)</span><a class="headerlink" href="#dq.orm.Attr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
+<dl class="attribute">
+<dt id="dq.orm.Attr.allow_from">
+<code class="descname">allow_from</code><a class="headerlink" href="#dq.orm.Attr.allow_from" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="dq.orm.Attr.allow_to">
+<code class="descname">allow_to</code><a class="headerlink" href="#dq.orm.Attr.allow_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="dq.orm.Attr.deserializer">
+<code class="descname">deserializer</code><a class="headerlink" href="#dq.orm.Attr.deserializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 4</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="dq.orm.Attr.name">
+<code class="descname">name</code><a class="headerlink" href="#dq.orm.Attr.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="dq.orm.Attr.serializer">
+<code class="descname">serializer</code><a class="headerlink" href="#dq.orm.Attr.serializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 3</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="dq.orm.DictMixin">
+<em class="property">class </em><code class="descclassname">dq.orm.</code><code class="descname">DictMixin</code><a class="reference internal" href="_modules/dq/orm.html#DictMixin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.orm.DictMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Dictionary mixin that provides converters to/from Python dicts.</p>
+<p>See comments of <code class="docutils literal notranslate"><span class="pre">Attr</span></code> above for defining fields to convert with this
+mixin.</p>
+<p>This class is inherited by <code class="docutils literal notranslate"><span class="pre">IDBase</span></code> and <code class="docutils literal notranslate"><span class="pre">UUIDBase</span></code> classes, so your
+class will not need to inherit directly from it.</p>
+<dl class="classmethod">
+<dt id="dq.orm.DictMixin.from_dict">
+<em class="property">classmethod </em><code class="descname">from_dict</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/orm.html#DictMixin.from_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.orm.DictMixin.from_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a dictionary to an object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>dict</em>) – The data dictionary.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns Base:</th><td class="field-body">The object converted from the dictionary.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="dq.orm.DictMixin.inflate_to_dict">
+<code class="descname">inflate_to_dict</code><span class="sig-paren">(</span><em>session=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/orm.html#DictMixin.inflate_to_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.orm.DictMixin.inflate_to_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert an object to dictionary, with relationships inflated.</p>
+<p>This method is the default implementation, which simply calls the
+<code class="docutils literal notranslate"><span class="pre">to_dict</span></code> method. Subclasses willing to inflate certain fields should
+override this method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>session</strong> (<em>Session</em>) – The optional SQL session.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns dict:</th><td class="field-body">The dictionary converted from the object.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="dq.orm.DictMixin.to_dict">
+<code class="descname">to_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/orm.html#DictMixin.to_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.orm.DictMixin.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert an object to dictionary.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns dict:</th><td class="field-body">The dictionary converted from the object.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="dq.orm.DictMixin.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/orm.html#DictMixin.to_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.orm.DictMixin.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert an object to JSON string.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns string:</th><td class="field-body">The JSON string representation of the object.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="dq.orm.QueryMixin">
+<em class="property">class </em><code class="descclassname">dq.orm.</code><code class="descname">QueryMixin</code><a class="reference internal" href="_modules/dq/orm.html#QueryMixin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.orm.QueryMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Query helper functions useful to all models.</p>
+<p>This class is inherited by <code class="docutils literal notranslate"><span class="pre">IDBase</span></code> and <code class="docutils literal notranslate"><span class="pre">UUIDBase</span></code> classes, so your
+class will not need to inherit directly from it.</p>
+<dl class="classmethod">
+<dt id="dq.orm.QueryMixin.get_by">
+<em class="property">classmethod </em><code class="descname">get_by</code><span class="sig-paren">(</span><em>column</em>, <em>value</em>, <em>for_update=False</em>, <em>contains_deleted=False</em>, <em>contains_empty=False</em>, <em>session=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/orm.html#QueryMixin.get_by"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.orm.QueryMixin.get_by" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the object satisfying the query condition.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>column</strong> (<em>string</em>) – The name of the column to query by.</li>
+<li><strong>value</strong> (<em>string</em>) – The value of the column to query for.</li>
+<li><strong>for_update</strong> (<em>boolean</em>) – Whether the query is for updating the row.</li>
+<li><strong>contains_deleted</strong> (<em>boolean</em>) – Whether to contain deleted records.
+Default is <code class="docutils literal notranslate"><span class="pre">False</span></code> and only active records are returned.</li>
+<li><strong>contains_empty</strong> (<em>boolean</em>) – Whether to contain empty records.
+Default is <code class="docutils literal notranslate"><span class="pre">False</span></code> and if value is <code class="docutils literal notranslate"><span class="pre">None</span></code>, <code class="docutils literal notranslate"><span class="pre">None</span></code> will be
+returned.</li>
+<li><strong>session</strong> (<em>Session</em>) – Optional SQL session.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Returns QueryMixin:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first last">The matching object. This method is designed for
+unique queries and in case of multiple matches, only the first one
+is returned.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="dq.orm.QueryMixin.get_multi">
+<em class="property">classmethod </em><code class="descname">get_multi</code><span class="sig-paren">(</span><em>column</em>, <em>value</em>, <em>sort_column='updated_at'</em>, <em>desc=True</em>, <em>offset=0</em>, <em>limit=10</em>, <em>session=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/orm.html#QueryMixin.get_multi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.orm.QueryMixin.get_multi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get multiple objects satisfying the query condition.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>column</strong> (<em>string</em>) – The name of the column to query by.</li>
+<li><strong>value</strong> (<em>string</em>) – The value of the column to query for.</li>
+<li><strong>sort_column</strong> (<em>string</em>) – The column to sort results against. Default
+is updated_at. Please note that created_at usually doesn’t have
+index, so if it should be used as the sort column, an index needs
+to be added.</li>
+<li><strong>desc</strong> (<em>bool</em>) – Whether to sort DESC. Default is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</li>
+<li><strong>offset</strong> (<em>int</em>) – The query offset. Default is 0.</li>
+<li><strong>limit</strong> (<em>int</em>) – The max number of results to return. Default is 10.
+If specified, the function will try to fetch one more result to
+indicate whether there are more results. If not specified or 0, all
+results will be returned.</li>
+<li><strong>session</strong> (<em>Session</em>) – The optional SQL session to use.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="dq.orm.TimeMixin">
+<em class="property">class </em><code class="descclassname">dq.orm.</code><code class="descname">TimeMixin</code><a class="reference internal" href="_modules/dq/orm.html#TimeMixin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.orm.TimeMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Time fields common to all models.</p>
+<p>This class is inherited by <code class="docutils literal notranslate"><span class="pre">IDBase</span></code> and <code class="docutils literal notranslate"><span class="pre">UUIDBase</span></code> classes, so your
+class will not need to inherit directly from it.</p>
+<dl class="attribute">
+<dt id="dq.orm.TimeMixin.created_at">
+<code class="descname">created_at</code><em class="property"> = Column(None, ArrowType(), table=None, nullable=False, default=ColumnDefault(&lt;function utcnow&gt;))</em><a class="headerlink" href="#dq.orm.TimeMixin.created_at" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="dq.orm.TimeMixin.deleted_at">
+<code class="descname">deleted_at</code><em class="property"> = Column(None, ArrowType(), table=None)</em><a class="headerlink" href="#dq.orm.TimeMixin.deleted_at" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="dq.orm.TimeMixin.updated_at">
+<code class="descname">updated_at</code><em class="property"> = Column(None, ArrowType(), table=None, nullable=False, onupdate=ColumnDefault(&lt;function utcnow&gt;), default=ColumnDefault(&lt;function utcnow&gt;))</em><a class="headerlink" href="#dq.orm.TimeMixin.updated_at" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="dq.orm.UserRelationMixin">
+<em class="property">class </em><code class="descclassname">dq.orm.</code><code class="descname">UserRelationMixin</code><a class="reference internal" href="_modules/dq/orm.html#UserRelationMixin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.orm.UserRelationMixin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#dq.orm.QueryMixin" title="dq.orm.QueryMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">dq.orm.QueryMixin</span></code></a></p>
+<p>Mixin that provides a common <code class="docutils literal notranslate"><span class="pre">get_by_user</span></code> function.</p>
+<p>This mixin should be used by classes that a user can have a 1-many
+relationship to, such as orders, shipments, and periods.</p>
+<dl class="classmethod">
+<dt id="dq.orm.UserRelationMixin.get_by_user">
+<em class="property">classmethod </em><code class="descname">get_by_user</code><span class="sig-paren">(</span><em>user_id</em>, <em>desc=True</em>, <em>offset=0</em>, <em>limit=10</em>, <em>session=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/orm.html#UserRelationMixin.get_by_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.orm.UserRelationMixin.get_by_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the related object of a user.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>user_id</strong> (<em>string/int</em>) – The ID (if int) or UUID (if string) of the
+user.</li>
+<li><strong>desc</strong> (<em>bool</em>) – Whether to sort DESC. Default is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</li>
+<li><strong>offset</strong> (<em>integer</em>) – The offset of the objects. If limit is 10 and
+offset is 5, the function will attempt to get the 6th to 15th
+most recent objects.</li>
+<li><strong>limit</strong> (<em>integer</em>) – The max number of objects to get.</li>
+<li><strong>session</strong> (<em>Session</em>) – The optional SQL session.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Returns list&lt;UserRelationMixin&gt;:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first last">The list of objects matching the
+requirement.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="dq.orm.UserRelationMixin.sort_key">
+<code class="descname">sort_key</code><em class="property"> = None</em><a class="headerlink" href="#dq.orm.UserRelationMixin.sort_key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="dq.orm.arrow_in">
+<code class="descclassname">dq.orm.</code><code class="descname">arrow_in</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/orm.html#arrow_in"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.orm.arrow_in" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert an arrow-understandable time to an Arrow object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> – The arrow-understandable time or <code class="docutils literal notranslate"><span class="pre">None</span></code>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns Arrow:</th><td class="field-body">The Arrow object, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if the input is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="dq.orm.arrow_out">
+<code class="descclassname">dq.orm.</code><code class="descname">arrow_out</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/orm.html#arrow_out"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.orm.arrow_out" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert an Arrow object to timestamp.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<em>Arrow</em>) – The Arrow time or <code class="docutils literal notranslate"><span class="pre">None</span></code>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns int:</th><td class="field-body">The timestamp, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if the input is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="dq.orm.boolean_mask">
+<code class="descclassname">dq.orm.</code><code class="descname">boolean_mask</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/orm.html#boolean_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.orm.boolean_mask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mask a value to boolean. This can be used for sensitive fields.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> – Any value.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Returns boolean:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">The input value casted to boolean.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="dq.orm.enum_value">
+<code class="descclassname">dq.orm.</code><code class="descname">enum_value</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/orm.html#enum_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.orm.enum_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert an enum to its value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<em>Enum</em>) – An enum.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns string:</th><td class="field-body">The value of the enum.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="dq.orm.uuid4_string">
+<code class="descclassname">dq.orm.</code><code class="descname">uuid4_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/orm.html#uuid4_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.orm.uuid4_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a UUID as string.</p>
+<p>The UUID type must NOT be used anywhere in the app - only use string.
+This function should be used whenever a new UUID is needed.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns string:</th><td class="field-body">A UUID string.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <div class="section" id="redis">
 <h2>Redis<a class="headerlink" href="#redis" title="Permalink to this headline">¶</a></h2>
 <p>The Redis client. It reads the config files for Redis configs, which you must specify to use this client. Refer to the <code class="docutils literal notranslate"><span class="pre">config/local.toml</span></code> file in this repo for an example.</p>
+<span class="target" id="module-dq.redis"></span><dl class="class">
+<dt id="dq.redis.Redis">
+<em class="property">class </em><code class="descclassname">dq.redis.</code><code class="descname">Redis</code><a class="reference internal" href="_modules/dq/redis.html#Redis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.redis.Redis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="classmethod">
+<dt id="dq.redis.Redis.atomic_rw">
+<em class="property">classmethod </em><code class="descname">atomic_rw</code><span class="sig-paren">(</span><em>key</em>, <em>evaluator=&lt;function Redis.&lt;lambda&gt;&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/redis.html#Redis.atomic_rw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.redis.Redis.atomic_rw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Atomically read-write a Redis key.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>key</strong> (<em>string</em>) – The key to read/write.</li>
+<li><strong>evaluator</strong> (<em>function</em>) – The evaluator function. It takes the
+existing value of the key, and should return the new value. If it
+returns None, no update is done and the operation is considered
+aborted. If not provided, the identity function is used.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns *:</th><td class="field-body"><p class="first">The value returned by evaluator. If there’s an
+atomicity violation, None is returned.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">Returns boolean:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><p class="first last">True if there’s no atomicity error. That is, this
+value is True if write succeeded or the user aborted, and False if
+there’s a atomicity violation (that prevented the write).</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="dq.redis.Redis.atomic_rw_hash">
+<em class="property">classmethod </em><code class="descname">atomic_rw_hash</code><span class="sig-paren">(</span><em>key</em>, <em>hash_key</em>, <em>evaluator=&lt;function Redis.&lt;lambda&gt;&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/redis.html#Redis.atomic_rw_hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.redis.Redis.atomic_rw_hash" title="Permalink to this definition">¶</a></dt>
+<dd><p>Atomically read-write a Redis hash key.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>key</strong> (<em>string</em>) – The key of the hash to read/write.</li>
+<li><strong>hash_key</strong> (<em>string</em>) – The hash key within the hash to read/write.</li>
+<li><strong>evaluator</strong> (<em>function</em>) – The evaluator function. It takes the
+existing value of the key, and should return the new value. If it
+returns None, no update is done and the operation is considered
+aborted. If not provided, the identity function is used.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns *:</th><td class="field-body"><p class="first">The value returned by evaluator. If there’s an
+atomicity violation, None is returned.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">Returns boolean:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><p class="first last">True if there’s no atomicity error. That is, this
+value is True if write succeeded or the user aborted, and False if
+there’s a atomicity violation (that prevented the write).</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="dq.redis.Redis.delete">
+<em class="property">classmethod </em><code class="descname">delete</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/redis.html#Redis.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.redis.Redis.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete the key from Redis.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>string</em>) – The key to delete.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns int:</th><td class="field-body">The number of items deleted. If 1, the key is found and
+deleted. If 0, the key is not found and nothing is done.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="dq.redis.Redis.exists">
+<em class="property">classmethod </em><code class="descname">exists</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/redis.html#Redis.exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.redis.Redis.exists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether the key exists in Redis.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>string</em>) – The Redis key.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Returns boolean:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><code class="docutils literal notranslate"><span class="pre">True</span></code> if the key exists, and <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="dq.redis.Redis.expire">
+<em class="property">classmethod </em><code class="descname">expire</code><span class="sig-paren">(</span><em>key</em>, <em>second</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/redis.html#Redis.expire"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.redis.Redis.expire" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the key to expire in specified second.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>key</strong> (<em>string</em>) – The key to set expire.</li>
+<li><strong>second</strong> (<em>int</em>) – The number of seconds for the key to live.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Returns boolean:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first last">True if the operation is successful.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="dq.redis.Redis.get">
+<em class="property">classmethod </em><code class="descname">get</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/redis.html#Redis.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.redis.Redis.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the value stored at the key.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>string</em>) – The Redis key.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns string:</th><td class="field-body">The value of the key. If the key does not exist,
+<code class="docutils literal notranslate"><span class="pre">None</span></code> will be returned.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="dq.redis.Redis.get_json">
+<em class="property">classmethod </em><code class="descname">get_json</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/redis.html#Redis.get_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.redis.Redis.get_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the value stored at the key as JSON.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>string</em>) – The Redis key.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns object:</th><td class="field-body">The value of the key as an unserialized JSON object.
+If the key does not exist, <code class="docutils literal notranslate"><span class="pre">None</span></code> will be returned.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="dq.redis.Redis.hdelete">
+<em class="property">classmethod </em><code class="descname">hdelete</code><span class="sig-paren">(</span><em>key</em>, <em>*hash_keys</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/redis.html#Redis.hdelete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.redis.Redis.hdelete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete keys from a hash table.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">hash_keys</span></code> argument is a variable-length array and can be
+specified as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">redis</span><span class="o">.</span><span class="n">hdelete</span><span class="p">(</span><span class="s1">&#39;danqing&#39;</span><span class="p">,</span> <span class="s1">&#39;key1&#39;</span><span class="p">,</span> <span class="s1">&#39;key2&#39;</span><span class="p">)</span>
+<span class="n">redis</span><span class="o">.</span><span class="n">hdelete</span><span class="p">(</span><span class="s1">&#39;danqing&#39;</span><span class="p">,</span> <span class="s1">&#39;key2&#39;</span><span class="p">)</span>
+<span class="n">redis</span><span class="o">.</span><span class="n">hdelete</span><span class="p">(</span><span class="s1">&#39;danqing&#39;</span><span class="p">,</span> <span class="s1">&#39;key1&#39;</span><span class="p">,</span> <span class="s1">&#39;key2&#39;</span><span class="p">,</span> <span class="s1">&#39;key3&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>key</strong> (<em>string</em>) – The key of the hash table.</li>
+<li><strong>hash_keys</strong> (<em>string...</em>) – A list of hash keys to delete from the hash
+table.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns int:</th><td class="field-body"><p class="first">The number of keys actually deleted. If 3 hash keys are
+specified but only 1 is found (and deleted), 1 is returned.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><strong>redis.ResponseError</strong> – If <code class="docutils literal notranslate"><span class="pre">key</span></code> holds something other than a
+hash table.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="dq.redis.Redis.hget">
+<em class="property">classmethod </em><code class="descname">hget</code><span class="sig-paren">(</span><em>key</em>, <em>hash_key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/redis.html#Redis.hget"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.redis.Redis.hget" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the value for a hash key in the hash table at the specified key.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>key</strong> (<em>string</em>) – The key to fetch.</li>
+<li><strong>hash_key</strong> (<em>string</em>) – The hash key to fetch value for in the hash
+table.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns string:</th><td class="field-body"><p class="first">The value corresponding to the hash key in the hash
+table. If either <code class="docutils literal notranslate"><span class="pre">key</span></code> or <code class="docutils literal notranslate"><span class="pre">hash_key</span></code> is not found, <code class="docutils literal notranslate"><span class="pre">None</span></code> is
+returned.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><strong>redis.ResponseError</strong> – If <code class="docutils literal notranslate"><span class="pre">key</span></code> holds something other than a
+hash table.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="dq.redis.Redis.hgetall">
+<em class="property">classmethod </em><code class="descname">hgetall</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/redis.html#Redis.hgetall"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.redis.Redis.hgetall" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the hash table at the specified key.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>string</em>) – The key to fetch.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns dict:</th><td class="field-body">The hash table at the specified key. If no hash table
+found (i.e. key not found), an empty dictionary is returned.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><strong>redis.ResponseError</strong> – If <code class="docutils literal notranslate"><span class="pre">key</span></code> holds something other than a
+hash table.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="dq.redis.Redis.hset">
+<em class="property">classmethod </em><code class="descname">hset</code><span class="sig-paren">(</span><em>key</em>, <em>hash_key</em>, <em>hash_value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/redis.html#Redis.hset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.redis.Redis.hset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the value for a hash key in the hash table at the specified key.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>key</strong> (<em>string</em>) – The key of the hash table. If the hash table does
+not exist yet, it will be created.</li>
+<li><strong>hash_key</strong> (<em>string</em>) – The hash key to set value for in the hash
+table.</li>
+<li><strong>hash_value</strong> (<em>string</em>) – The value to set to the key. If this is not
+a string, it will be casted to a string.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns int:</th><td class="field-body"><p class="first">The number of new fields. If 1, a new field is added
+(<code class="docutils literal notranslate"><span class="pre">hash_key</span></code> is new). If 0, <code class="docutils literal notranslate"><span class="pre">hash_key</span></code> already exists and its
+value is updated.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><strong>redis.ResponseError</strong> – If <code class="docutils literal notranslate"><span class="pre">key</span></code> holds something other than a
+hash table.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="dq.redis.Redis.lpeek">
+<em class="property">classmethod </em><code class="descname">lpeek</code><span class="sig-paren">(</span><em>key</em>, <em>count</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/redis.html#Redis.lpeek"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.redis.Redis.lpeek" title="Permalink to this definition">¶</a></dt>
+<dd><p>Peek the first count elements in the list without popping.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>key</strong> (<em>string</em>) – The key of the array.</li>
+<li><strong>count</strong> (<em>int</em>) – The number of elements to peek.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns list:</th><td class="field-body"><p class="first last">The list of peeked elements.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="dq.redis.Redis.lpop">
+<em class="property">classmethod </em><code class="descname">lpop</code><span class="sig-paren">(</span><em>key</em>, <em>count</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/redis.html#Redis.lpop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.redis.Redis.lpop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pop the first count elements in the list.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>key</strong> (<em>string</em>) – The key of the array.</li>
+<li><strong>count</strong> (<em>int</em>) – The number of elements to pop. If there are fewer
+than <code class="docutils literal notranslate"><span class="pre">count</span></code> elements, everything will be popped.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns list:</th><td class="field-body"><p class="first last">The list of popped elements.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="dq.redis.Redis.rpush">
+<em class="property">classmethod </em><code class="descname">rpush</code><span class="sig-paren">(</span><em>key</em>, <em>*values</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/redis.html#Redis.rpush"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.redis.Redis.rpush" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add values to a Redis list from the end.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">values</span></code> argument is a variable-length array and can be
+specified as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">redis</span><span class="o">.</span><span class="n">rpush</span><span class="p">(</span><span class="s1">&#39;danqing&#39;</span><span class="p">,</span> <span class="s1">&#39;val1&#39;</span><span class="p">,</span> <span class="s1">&#39;val2&#39;</span><span class="p">)</span>
+<span class="n">redis</span><span class="o">.</span><span class="n">rpush</span><span class="p">(</span><span class="s1">&#39;danqing&#39;</span><span class="p">,</span> <span class="s1">&#39;val1&#39;</span><span class="p">)</span>
+<span class="n">redis</span><span class="o">.</span><span class="n">rpush</span><span class="p">(</span><span class="s1">&#39;danqing&#39;</span><span class="p">,</span> <span class="s1">&#39;val1&#39;</span><span class="p">,</span> <span class="s1">&#39;val2&#39;</span><span class="p">,</span> <span class="s1">&#39;val3&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>key</strong> (<em>string</em>) – The key of the list. If the list does not exist yet,
+it will be created.</li>
+<li><strong>values</strong> (<em>string...</em>) – A list of values to insert. If any is not a
+string, it will be casted to a string.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns int:</th><td class="field-body"><p class="first last">The total number of elements in the list after the push.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="dq.redis.Redis.set">
+<em class="property">classmethod </em><code class="descname">set</code><span class="sig-paren">(</span><em>key</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/redis.html#Redis.set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.redis.Redis.set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the key to the specified value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>key</strong> (<em>string</em>) – The Redis key.</li>
+<li><strong>value</strong> (<em>string</em>) – The value to set. If this is not a string, it will
+be casted to a string.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Returns boolean:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first last"><code class="docutils literal notranslate"><span class="pre">True</span></code> if the operation is successful.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="dq.redis.Redis.setex">
+<em class="property">classmethod </em><code class="descname">setex</code><span class="sig-paren">(</span><em>key</em>, <em>value</em>, <em>second</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/redis.html#Redis.setex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.redis.Redis.setex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the key to the specified value, with an expiration time.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>key</strong> (<em>string</em>) – The Redis key.</li>
+<li><strong>value</strong> (<em>string</em>) – The value to set.</li>
+<li><strong>second</strong> (<em>int</em>) – The TTL in second.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Returns boolean:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"><p class="first last"><code class="docutils literal notranslate"><span class="pre">True</span></code> if the operation is successful.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="dq.redis.init_redis">
+<code class="descclassname">dq.redis.</code><code class="descname">init_redis</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/redis.html#init_redis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.redis.init_redis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize a Redis connection.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>string</em>) – The config key. The entry should at least contain the
+host, port and db number of the instance.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns redis:</th><td class="field-body">The redis instance if the config exists and is valid, and
+None otherwise.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="dq.redis.strval">
+<code class="descclassname">dq.redis.</code><code class="descname">strval</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/redis.html#strval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.redis.strval" title="Permalink to this definition">¶</a></dt>
+<dd><p>JSON serialize value as appropriate.</p>
+<p>This function should only be used internally.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<em>dict|list|string|number</em>) – An input value.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns string:</th><td class="field-body">The output value, suitable for saving by Redis. If
+<code class="docutils literal notranslate"><span class="pre">value</span></code> is a <code class="docutils literal notranslate"><span class="pre">dict</span></code> or <code class="docutils literal notranslate"><span class="pre">list</span></code>, it will be JSON-serialized.
+Otherwise it will be left as-is. Note that while Redis only takes
+string values, numbers have their string values be themselves in
+strings, and the conversion will be done by Redis automatically.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="dq.redis.strvals">
+<code class="descclassname">dq.redis.</code><code class="descname">strvals</code><span class="sig-paren">(</span><em>*values</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/redis.html#strvals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.redis.strvals" title="Permalink to this definition">¶</a></dt>
+<dd><p>JSON serialize values as appropriate.</p>
+<p>This function should only be used internally.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>values</strong> (<em>..dict|list|string|number</em>) – Input values.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Returns list&lt;string&gt;:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">The output values. See docs for <code class="docutils literal notranslate"><span class="pre">strval</span></code> for
+more explanations.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <div class="section" id="retry">
 <h2>Retry<a class="headerlink" href="#retry" title="Permalink to this headline">¶</a></h2>
 <p>Retry helpers. A function can raise <code class="docutils literal notranslate"><span class="pre">RecoverableError</span></code> as needed so that it can be retried. The SQL variant can also be used to retry SQL errors.</p>
+<span class="target" id="module-dq.retry"></span><dl class="function">
+<dt id="dq.retry.recoverable_error">
+<code class="descclassname">dq.retry.</code><code class="descname">recoverable_error</code><span class="sig-paren">(</span><em>exception</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/retry.html#recoverable_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.retry.recoverable_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use as <code class="docutils literal notranslate"><span class="pre">&#64;retry(retry_on_exception=recoverable_error)</span></code>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="dq.retry.sql_or_recoverable_error">
+<code class="descclassname">dq.retry.</code><code class="descname">sql_or_recoverable_error</code><span class="sig-paren">(</span><em>exception</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/dq/retry.html#sql_or_recoverable_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#dq.retry.sql_or_recoverable_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retries recoverable error and SQL errors.</p>
+<p>This function rolls back the current session if the exception is a SQL one.
+Use as <code class="docutils literal notranslate"><span class="pre">&#64;retry(retry_on_exception=sql_or_recoverable_error)</span></code>.</p>
+</dd></dl>
+
 </div>
 <div class="section" id="string">
 <h2>String<a class="headerlink" href="#string" title="Permalink to this headline">¶</a></h2>
