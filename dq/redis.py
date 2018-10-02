@@ -1,8 +1,34 @@
 import json
+import logging
 
 import redis
 
 from dq.config import Config
+from dq.logging import error
+
+logger = logging.getLogger(__name__)
+
+
+def init_redis(key):
+    """Initialize a Redis connection.
+
+    :param string key: The config key. The entry should at least contain the
+        host, port and db number of the instance.
+    :returns redis: The redis instance if the config exists and is valid, and
+        None otherwise.
+    """
+    cfg = Config.get(key)
+    if not cfg:
+        return None
+    try:
+        i = redis.StrictRedis(**cfg)
+        # This will attempt to connect to Redis and throw an error if the
+        # connection is invalid.
+        i.info()
+        return i
+    except Exception:
+        error(logger, 'Unable to connect to Redis', None)
+        return None
 
 
 def strval(value):
@@ -34,7 +60,7 @@ def strvals(*values):
 
 class Redis(object):
 
-    _instance = redis.StrictRedis(**Config.get('redis'))
+    _instance = init_redis('redis')
 
     @classmethod
     def exists(cls, key):
@@ -54,6 +80,17 @@ class Redis(object):
             ``None`` will be returned.
         """
         return cls._instance.get(key)
+
+    @classmethod
+    def get_json(cls, key):
+        """Get the value stored at the key as JSON.
+
+        :param string key: The Redis key.
+        :returns object: The value of the key as an unserialized JSON object.
+            If the key does not exist, ``None`` will be returned.
+        """
+        resp = cls.get(key)
+        return json.loads(resp) if resp else None
 
     @classmethod
     def set(cls, key, value):
