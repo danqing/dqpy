@@ -27,17 +27,19 @@ class TestCache(unittest.TestCase):
         assert some_func_2() == 'hello2'
 
     def test_cache_fresh(self):
-        value = 0
+        value = 'hello'
 
-        def key_func(fresh=False):
+        def key_func(fresh=False, raw=False):
             return 'cache-fresh-key'
 
         @cache.cache(key_func=key_func)
-        def some_func(fresh=False):
+        def some_func(fresh=False, raw=False):
             nonlocal value
-            value += 1
+            if value == 'hello':
+                value = 'world'
+                return 'hello'
             return value
 
-        assert some_func(fresh=True) == 1
-        assert some_func() == 1
-        assert some_func(fresh=True) == 2
+        assert some_func(fresh=True) == 'hello'
+        assert some_func(raw=True) == b'hello'
+        assert some_func(fresh=True) == 'world'
