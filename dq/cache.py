@@ -53,8 +53,7 @@ def cache(ttl=600, key_func=None):
             if not kwargs.get('fresh'):
                 resp = _redis.get(key)
                 if resp is not None:
-                    return resp
-                return json.loads(resp)
+                    return json.loads(resp)
             resp = func(*args, **kwargs)
             if not _redis.setex(key, ttl, strval(resp)):
                 warning(logger, 'Unable to save to cache', {'key': key})

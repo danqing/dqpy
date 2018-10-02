@@ -12,6 +12,16 @@ Danqing's shared Python library, written with love for `the better Danqing <http
    :maxdepth: 2
    :caption: Table of Contents
 
+Cache
+-----
+
+The cache module provides a simple JSON and Redis based caching decorator.
+
+.. automodule:: dq.cache
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Config
 ------
 
