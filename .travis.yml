@@ -1,4 +1,3 @@
-dist: xenial
 matrix:
   include:
     - python: 3.5
