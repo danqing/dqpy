@@ -3,10 +3,15 @@ import unittest
 from time import sleep
 from uuid import uuid4
 
-from dq.redis import Redis
+from dq.redis import init_redis, Redis
 
 
 class TestRedis(unittest.TestCase):
+
+    def test_init(self):
+        assert init_redis('redis')
+        assert not init_redis('none')
+        assert not init_redis('faulty_redis')
 
     def test_exists(self):
         key = 'dqtest-{}'.format(uuid4())

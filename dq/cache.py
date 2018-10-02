@@ -1,32 +1,9 @@
 import json
-import logging
 from functools import wraps
 
-import redis
+from dq.redis import init_redis, strval
 
-from dq.config import Config
-from dq.logging import error, warning
-from dq.redis import strval
-
-logger = logging.getLogger(__name__)
-
-
-def _init_redis():
-    cfg = Config.get('cache')
-    if not cfg:
-        return None
-    try:
-        i = redis.StrictRedis(**cfg)
-        # This will attempt to connect to Redis and throw an error if the
-        # connection is invalid.
-        i.info()
-        return i
-    except Exception:
-        error(logger, 'Unable to connect to cache Redis', None)
-        return None
-
-
-_redis = _init_redis()
+_redis = init_redis('cache')
 
 
 def cache(ttl=600, key_func=None):
@@ -55,8 +32,7 @@ def cache(ttl=600, key_func=None):
                 if resp is not None:
                     return json.loads(resp)
             resp = func(*args, **kwargs)
-            if not _redis.setex(key, ttl, strval(resp)):
-                warning(logger, 'Unable to save to cache', {'key': key})
+            _redis.setex(key, ttl, strval(resp))
             return resp
 
         return decorated_func
