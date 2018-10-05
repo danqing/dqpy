@@ -12,7 +12,7 @@ requires = [
     'schematics==2.1.0',
     'SQLAlchemy-Utils==0.33.5',
     'SQLAlchemy==1.2.12',
-    'toml==0.9.6',
+    'toml==0.10.0',
 ]
 
 setup(
