@@ -82,9 +82,7 @@ pygments_style = 'sphinx'
 todo_include_todos = False
 
 # Sidebar components.
-html_sidebars = {
-    '**': ['globaltoc.html', 'sourcelink.html', 'searchbox.html'],
-}
+html_sidebars = {'**': ['localtoc.html', 'searchbox.html']}
 
 
 # -- Options for HTML output ----------------------------------------------
