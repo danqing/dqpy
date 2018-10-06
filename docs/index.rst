@@ -6,7 +6,7 @@
 dqpy
 ====
 
-Danqing's shared Python library, written with love for `the better Danqing <https://danqing.co/>`_.
+Danqing's shared Python library, written with love for `the better Danqing <https://www.danqing.co/>`_.
 
 .. toctree::
    :maxdepth: 2
