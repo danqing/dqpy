@@ -4,7 +4,7 @@ import re
 NAMESPACE = 'abcdefghijklmnopqrstuvwxyz1234567890'
 PUNCS = '!"#$%&\'()*+,.:;<=>?@[\\]^_`{|}~'
 TBL = dict.fromkeys(ord(i) for i in PUNCS)
-SAFE_PATH = re.compile('^(?!(/|\.{2}))(?!.*/(\.*)(?:/.*|$)).*$')
+SAFE_PATH = re.compile(r'^(?!(/|\.{2}))(?!.*/(\.*)(?:/.*|$)).*$')
 
 
 def lower_no_punc(text):
