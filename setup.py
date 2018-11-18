@@ -8,10 +8,10 @@ requires = [
     'arrow==0.12.1',
     'emails==0.5.15',
     'PyMySQL==0.9.2',
-    'redis==2.10.6',
+    'redis==3.0.1',
     'schematics==2.1.0',
     'SQLAlchemy-Utils==0.33.6',
-    'SQLAlchemy==1.2.12',
+    'SQLAlchemy==1.2.14',
     'toml==0.10.0',
 ]
 

@@ -21,7 +21,7 @@ def init_redis(key):
     if not cfg:
         return None
     try:
-        i = redis.StrictRedis(**cfg)
+        i = redis.Redis(**cfg)
         # This will attempt to connect to Redis and throw an error if the
         # connection is invalid.
         i.info()
