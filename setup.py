@@ -2,15 +2,15 @@
 
 from setuptools import find_packages, setup
 
-__version__ = '2.0.2'
+__version__ = '2.0.3'
 
 requires = [
-    'arrow==0.12.1',
+    'arrow==0.13.0',
     'emails==0.5.15',
-    'PyMySQL==0.9.2',
+    'PyMySQL==0.9.3',
     'redis==3.0.1',
     'schematics==2.1.0',
-    'SQLAlchemy-Utils==0.33.9',
+    'SQLAlchemy-Utils==0.33.10',
     'SQLAlchemy==1.2.15',
     'toml==0.10.0',
 ]
