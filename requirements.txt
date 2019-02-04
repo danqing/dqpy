@@ -5,7 +5,7 @@ sphinx
 # Testing
 pdbpp
 flake8
-pytest
+pytest>=4.2.0
 pytest-cov
 mock
 coveralls
