@@ -5,14 +5,14 @@ from setuptools import find_packages, setup
 __version__ = '2.0.3'
 
 requires = [
-    'arrow==0.13.0',
-    'emails==0.5.15',
-    'PyMySQL==0.9.3',
-    'redis==3.0.1',
-    'schematics==2.1.0',
-    'SQLAlchemy-Utils==0.33.10',
-    'SQLAlchemy==1.2.15',
-    'toml==0.10.0',
+    'arrow>=0.13.0,<0.14.0',
+    'emails>=0.5.15,<0.6.0',
+    'PyMySQL>=0.9.3,<0.10.0',
+    'redis>=3.1.0,<3.2.0',
+    'schematics>=2.1.0,<2.2.0',
+    'SQLAlchemy-Utils>=0.33.11,<0.34.0',
+    'SQLAlchemy>=1.2.17,<1.3.0',
+    'toml>=0.10.0,<0.11.0',
 ]
 
 DESCRIPTION = """This is Danqing's shared Python library, for [the better Danqing](https://www.danqing.co).
