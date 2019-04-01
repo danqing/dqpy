@@ -2,13 +2,12 @@
 
 from setuptools import find_packages, setup
 
-__version__ = '2.0.3'
+__version__ = '2.0.4'
 
 requires = [
     'arrow>=0.13.0,<0.14.0',
     'emails>=0.5.15,<0.6.0',
-    'PyMySQL>=0.9.3,<0.10.0',
-    'redis>=3.1.0,<3.2.0',
+    'redis>=3.2.0,<3.3.0',
     'schematics>=2.1.0,<2.2.0',
     'SQLAlchemy-Utils>=0.33.11,<0.34.0',
     'SQLAlchemy>=1.2.17,<1.3.0',
@@ -31,6 +30,10 @@ setup(
     url='https://github.com/danqing/dqpy',
     packages=find_packages(),
     install_requires=requires,
+    extras_require={
+        'mysql': ['PyMySQL>=0.9.3,<0.10.0'],
+        'psql': ['psycopg2>=2.7.7,<2.8.0'],
+    },
     entry_points={
         'console_scripts': ['dbadmin=dq.dbadmin:main'],
     },
