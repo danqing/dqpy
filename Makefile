@@ -3,7 +3,7 @@ DOC_SOURCES = config docs dq Makefile
 .PHONY: bootstrap
 bootstrap:
 	pip3 -q install -r requirements.txt
-	pip3 install .[mysql]
+	pip3 install -e .[mysql]
 
 .PHONY: create-db
 create-db:
