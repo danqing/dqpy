@@ -10,7 +10,7 @@ requires = [
     'redis>=3.2.0,<3.3.0',
     'schematics>=2.1.0,<2.2.0',
     'SQLAlchemy-Utils>=0.33.11,<0.34.0',
-    'SQLAlchemy>=1.2.17,<1.3.0',
+    'SQLAlchemy>=1.3.0,<1.4.0',
     'toml>=0.10.0,<0.11.0',
 ]
 
@@ -32,7 +32,7 @@ setup(
     install_requires=requires,
     extras_require={
         'mysql': ['PyMySQL>=0.9.3,<0.10.0'],
-        'psql': ['psycopg2>=2.7.7,<2.8.0'],
+        'psql': ['psycopg2>=2.8.0,<2.9.0'],
     },
     entry_points={
         'console_scripts': ['dbadmin=dq.dbadmin:main'],
