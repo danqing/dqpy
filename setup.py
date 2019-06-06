@@ -5,7 +5,7 @@ from setuptools import find_packages, setup
 __version__ = '2.0.4'
 
 requires = [
-    'arrow>=0.13.0,<0.14.0',
+    'arrow>=0.14.0,<0.15.0',
     'emails>=0.5.15,<0.6.0',
     'redis>=3.2.0,<3.3.0',
     'schematics>=2.1.0,<2.2.0',
