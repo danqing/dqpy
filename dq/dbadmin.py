@@ -13,7 +13,9 @@ def create(url_key):
     try:
         engine = create_engine(Config.get(url_key))
         if not database_exists(engine.url):
-            create_database(engine.url)
+            encoding = ('utf8mb4' if engine.url.drivername.startswith('mysql')
+                        else 'utf8')
+            create_database(engine.url, encoding=encoding)
     except Exception as e:
         print('Unable to create database: %s' % e)
 
