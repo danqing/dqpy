@@ -7,9 +7,9 @@ __version__ = '2.0.6'
 requires = [
     'arrow>=0.15.0,<0.16.0',
     'emails>=0.5.15,<0.6.0',
-    'redis>=3.3.0,<3.4.0',
+    'redis>=3.4.0,<3.5.0',
     'schematics>=2.1.0,<2.2.0',
-    'SQLAlchemy-Utils>=0.35.0,<0.36.0',
+    'SQLAlchemy-Utils>=0.36.0,<0.37.0',
     'SQLAlchemy>=1.3.0,<1.4.0',
     'toml>=0.10.0,<0.11.0',
 ]
